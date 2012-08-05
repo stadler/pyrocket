@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Rocket Launcher Control
+Comment=Enabling Cubicle Warfare on Linux
+Exec=pyrocket
+Terminal=false
+Type=Application
+Icon=pyrocket
+Categories=GTK;GNOME;Game;

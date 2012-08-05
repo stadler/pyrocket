@@ -1,0 +1,4 @@
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", SYSFS{idVendor}=="1941", SYSFS{idProduct}=="8021", GROUP="plugdev", MODE="0660"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", SYSFS{idVendor}=="0a81", SYSFS{idProduct}=="0701", GROUP="plugdev", MODE="0660"
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", SYSFS{idVendor}=="1130", SYSFS{idProduct}=="0202", GROUP="plugdev", MODE="0660"
+

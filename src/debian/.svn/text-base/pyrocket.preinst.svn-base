@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = install ] || [ "$1" = upgrade ]; then
+	if [ -e "/etc/udev/rules.d/40-rocketlauncher.rules" ]; then
+		if [ "`md5sum \"/etc/udev/rules.d/40-rocketlauncher.rules\" | sed -e \"s/ .*//\"`" = \
+		     "`dpkg-query -W -f='${Conffiles}' pyrocket | sed -n -e \"\\\\' /etc/udev/rules.d/40-rocketlauncher.rules's/.* //p\"`" ]
+		then
+			rm -f "/etc/udev/rules.d/40-rocketlauncher.rules"
+		fi
+	fi
+fi
+
+#DEBHELPER#

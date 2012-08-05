@@ -1,0 +1,13 @@
+pyrocket (0.7-0ubuntu1) natty; urgency=low
+  * Incorporate upstream updates
+
+ -- Karl Ostmo <kostmo@gmail.com>  Wed, 6 Apr 2011 23:00:00 -0800
+
+pyrocket (0.6-0ubuntu1) karmic; urgency=low
+
+  * Initial Ubuntu package (LP: #242910)
+  - Added man page (pyrocket.6)
+  - Added debian/watch
+  - Fixed description
+
+ -- Karl Ostmo <kostmo@gmail.com>  Tue, 30 Dec 2008 19:29:33 -0600
