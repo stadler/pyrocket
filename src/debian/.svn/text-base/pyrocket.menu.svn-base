@@ -1,3 +1,0 @@
-?package(pyrocket):needs="X11" section="Games/Action"\
-  title="pyrocket" command="pyrocket"\
-  icon="/usr/share/pixmaps/pyrocket.xpm"
