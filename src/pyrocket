@@ -2,16 +2,16 @@
 
 '''PyGTK Missile Command
 
-Author:	Karl Ostmo
-Date:	January 21, 2008
-E-mail:	kostmo [at-symbol] g m a i l [dotcom]
-Web:	http://kostmo.ath.cx/
+Authors:	Karl Ostmo, Jacques Stadler
+Inception Date:	January 21, 2008
+E-mail:		jacques.stadler@gmail.com
 
 Provides a graphical interface for controlling the Dream Cheeky USB
 Rocket Launcher.  Arrow keys control direction, in addition to GUI buttons. "f" is fire.
 The program will also accept joystick control.
 
-Tested under Ubuntu 8.04 (Hardy).  Requires: python-gtk2 python-pyusb python-pygame
+Tested under Ubuntu 12.04 (Precise), 12.10 (Quantal).  
+Requires: python-gtk2 python-pyusb python-pygame
 '''
 
 from rocket_frontend import RocketWindow
