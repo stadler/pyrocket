@@ -1,3 +1,8 @@
+src/MANIFEST
+.project
+.pydevproject
+.gitignore
+.py
 *.py[co]
 
 # Packages

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import cv
 
 from pygtk import require
@@ -7,7 +8,7 @@ import gtk, gobject
 
 
 import pygame
-#from pygame.locals import *
+# from pygame.locals import *
 
 # ==================================
 
@@ -26,17 +27,17 @@ class StatefulJoystick:
 		self.joystick_debug = False
 		self.joystick_object = None
 
-    # ===============================
+	# ===============================
 
 	def joystick_init(self):
 
 		pygame.display.init()
 
-		pygame.joystick.init()		#initialize joystick module
-		pygame.joystick.get_init()	#verify initialization (boolean)
+		pygame.joystick.init()  # initialize joystick module
+		pygame.joystick.get_init()  # verify initialization (boolean)
 
-		joystick_count = pygame.joystick.get_count()	# get number of joysticks
-		print('%d joystick(s) connected' %joystick_count)
+		joystick_count = pygame.joystick.get_count()  # get number of joysticks
+		print('%d joystick(s) connected' % joystick_count)
 		if not joystick_count:
 			return False
 
@@ -48,11 +49,11 @@ class StatefulJoystick:
 
 
 
-		self.prev_button_array = [0]*self.num_buttons
+		self.prev_button_array = [0] * self.num_buttons
 		self.prev_movement_state = [0, 0]
 		self.prev_fire_button_state = 0
 
-		gobject.idle_add( self.joystick_event_loop )
+		gobject.idle_add(self.joystick_event_loop)
 
 		return True
 
@@ -63,18 +64,18 @@ class StatefulJoystick:
 		launcher = self.get_active_launcher()
 
 
-		pygame.event.pump()	#necessary for os to pass joystick events
+		pygame.event.pump()  # necessary for os to pass joystick events
 
 		axis_array = [self.joystick_object.get_axis(i) for i in range(self.num_axes)]
 		button_array = [self.joystick_object.get_button(i) for i in range(self.num_buttons)]
 
-		button_delta = map(lambda x, y: x-y, button_array, self.prev_button_array)
+		button_delta = map(lambda x, y: x - y, button_array, self.prev_button_array)
 
 
 		if button_delta[1] > 0:
-			self.laucher_id.set_value( self.laucher_id.get_value() + 1 )
+			self.laucher_id.set_value(self.laucher_id.get_value() + 1)
 		elif button_delta[2] > 0:
-			self.laucher_id.set_value( self.laucher_id.get_value() - 1 )
+			self.laucher_id.set_value(self.laucher_id.get_value() - 1)
 		elif button_delta[3] > 0:
 			fire_grp = self.stop_charge.get_group()
 			fire_grp[ (self.get_fire_mode() + 1) % len(fire_grp) ].set_active(True)
@@ -82,8 +83,8 @@ class StatefulJoystick:
 
 
 		if self.joystick_debug:
-#			print "Joystick Axes:", axis_array	# DEBUG
-			print "Buttons:", button_delta	# DEBUG
+# 			print "Joystick Axes:", axis_array	# DEBUG
+			print "Buttons:", button_delta  # DEBUG
 
 
 		axis_array.reverse()
@@ -124,4 +125,4 @@ class StatefulJoystick:
     # ===============================
 
 	def shutdown_joystick(self):
-		pygame.joystick.quit()	# destroy objects and clean up
+		pygame.joystick.quit()  # destroy objects and clean up

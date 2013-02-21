@@ -1,10 +1,7 @@
 FEATURES:
 =========
 
--> Use DBUS to monitor for more Rocket Launchers
-
-
--> Add support for strictly CLI interface
-
-
--> Add computer vision component
+- Use DBUS to monitor for more Rocket Launchers
+- Add support for strictly CLI interface
+- Add computer vision component
+- Support multiple cams

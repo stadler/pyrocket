@@ -3,7 +3,6 @@
 if __name__ == "__main__":
 
 	from distutils.core import setup
-	#from rocket_frontend import RocketWindow
 
 	setup(name="pyrocket",
 		description="control Striker II and Dream Cheeky USB Missile Launchers",
@@ -19,12 +18,12 @@ Cheeky, as well as the Striker II USB Laser Guided Missile Launcher marketed
 by Ninja Gizmos.""",
 		author="Karl Ostmo",
 		author_email="kostmo@gmail.com",
-		url="http://pyrocket.googlecode.com/",
-#		version=RocketWindow.version
-		version="0.7",
+		maintainer="Jacques Stadler",
+		maintainer_email="jacques.stadler@gmail.com",
+		url="https://github.com/stadler/pyrocket",
+		version="0.8",
 		py_modules=["rocket_backend", "rocket_frontend", "rocket_webcam", "rocket_joystick"],
 		scripts=["pyrocket"],
-#		data_files=[(RocketWindow.img_path, ["joystick.svg", "pyrocket.png"])]
 		data_files=[("share/pyrocket", ["joystick.svg", "pyrocket.png", "msnmissile.png"])]
 	)
 

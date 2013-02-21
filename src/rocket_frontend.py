@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 from pygtk import require
-require('2.0')
 import gtk, gobject
+require('2.0')
+
 
 # ==============================================================================
 # ==============================================================================
@@ -14,7 +15,7 @@ from rocket_joystick import StatefulJoystick
 class RocketWindow:
 
 	appname = "pyrocket"
-	version = "0.7"
+	version = "0.8"
 	local_share_dir = "/usr/share/"
 
 	keymap = [65364, 65362, 65361, 65363]
@@ -47,7 +48,7 @@ class RocketWindow:
 			"Supports Striker II and Dream Cheeky Models!"
 		]
 
-
+		print "Creating Window..."
 		# create a new window
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 #		self.window.set_title(u"Dream Cheeky\u0099 Control")	# The "TM" symbol doesn't work in GNOME

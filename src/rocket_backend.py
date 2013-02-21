@@ -1,7 +1,11 @@
 #!/usr/bin/python
 
-import usb
-from time import sleep
+import logging
+import sys
+import usb.core
+import usb.util
+
+
 
 class RocketManager:
 
@@ -10,7 +14,14 @@ class RocketManager:
 	housing_colors = ["green", "blue", "silver", "black", "gray"]
 
 	def __init__(self):
+		logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG, stream=sys.stdout)
 		self.launchers = []
+
+	def is_supported_device(self, dev):
+		for (cheeky_vendor_id, cheeky_product_id) in self.vendor_product_ids:
+			if dev.idVendor == cheeky_vendor_id and dev.idProduct == cheeky_product_id:
+				return True
+		return False
 
 	# -----------------------------
 
@@ -18,46 +29,49 @@ class RocketManager:
 
 		device_found = False
 
+		rocket_launchers = usb.core.find(find_all=True, custom_match = self.is_supported_device)
+		for dev in rocket_launchers:
+			logging.debug("vendorId=%02x, product_id=%02x\n", dev.idVendor, dev.idProduct)
+			for i, (cheeky_vendor_id, cheeky_product_id) in enumerate(self.vendor_product_ids):
+				if dev.idVendor == cheeky_vendor_id and dev.idProduct == cheeky_product_id:
 
+					print "Located", self.housing_colors[i], "Rocket Launcher device."
 
-		for bus in usb.busses():
-			for dev in bus.devices:
-				for i, (cheeky_vendor_id, cheeky_product_id) in enumerate(self.vendor_product_ids):
-					if dev.idVendor == cheeky_vendor_id and dev.idProduct == cheeky_product_id:
+					launcher = None
+					if i == 0:
+						launcher = OriginalRocketLauncher()
+					elif i == 1:
+						launcher = BlueRocketLauncher()
+					elif i == 2:
+	#							launcher = BlueRocketLauncher()	# EXPERIMENTAL
+					
+						return '''The '''+self.launcher_types[i]+''' ('''+self.housing_colors[i]+''') Rocket Launcher is not yet supported.  Try the '''+self.launcher_types[0]+''' or '''+self.launcher_types[1]+''' one.'''
+					elif i == 3:
+						launcher = BlackRocketLauncher()
+					elif i == 4:
+						launcher = GrayRocketLauncher()
 
-						print "Located", self.housing_colors[i], "Rocket Launcher device."
+					return_code = launcher.acquire( dev )
+					if not return_code:
+						self.launchers.append( launcher )
+						device_found = True
 
-						launcher = None
-						if i == 0:
-							launcher = OriginalRocketLauncher()
-						elif i == 1:
-							launcher = BlueRocketLauncher()
-						elif i == 2:
-#							launcher = BlueRocketLauncher()	# EXPERIMENTAL
-							return '''The '''+self.launcher_types[i]+''' ('''+self.housing_colors[i]+''') Rocket Launcher is not yet supported.  Try the '''+self.launcher_types[0]+''' or '''+self.launcher_types[1]+''' one.'''
-						elif i == 3:
-							launcher = BlackRocketLauncher()
-						elif i == 4:
-							launcher = GrayRocketLauncher()
+					elif return_code == 2:
+						print "Error"
+						string = '''You don't have permission to operate the USB device.  To give
+	yourself permission by default (in Ubuntu), create the file
+	/etc/udev/rules.d/40-missilelauncher.rules with the following line:
+	SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", SYSFS{idVendor}=="%04x", SYSFS{idProduct}=="%04x", GROUP="plugdev", MODE="0660"
+	The .deb installer should have done this for you.  If you just installed
+	the .deb, you need to unplug and replug the USB device now.  This will apply
+	the new permissions from the .rules file.''' % (cheeky_vendor_id, cheeky_product_id)
+						print string
 
-						return_code = launcher.acquire( dev )
-						if not return_code:
-							self.launchers.append( launcher )
-							device_found = True
-
-						elif return_code == 2:
-							string = '''You don't have permission to operate the USB device.  To give
-yourself permission by default (in Ubuntu), create the file
-/etc/udev/rules.d/40-missilelauncher.rules with the following line:
-SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ACTION=="add", SYSFS{idVendor}=="%04x", SYSFS{idProduct}=="%04x", GROUP="plugdev", MODE="0660"
-The .deb installer should have done this for you.  If you just installed
-the .deb, you need to unplug and replug the USB device now.  This will apply
-the new permissions from the .rules file.''' % (cheeky_vendor_id, cheeky_product_id)
-							print string
-
-							return '''You don't have permission to operate the USB device.
-If you just installed the .deb, you need to plug cycle the USB device now.  This will apply
-the new permissions from the .rules file.'''
+						return '''You don't have permission to operate the USB device.
+	If you just installed the .deb, you need to plug cycle the USB device now.  This will apply
+	the new permissions from the .rules file.'''
+					else:
+						print "Something went wrong..."
 
 
 
@@ -84,30 +98,39 @@ class OriginalRocketLauncher:
 
 	# ------------------------------------------------------
 	def acquire(self, dev):
+		assert dev is not None
+		
+		'''
+		if dev is None:
+			print "device not found"
+		else:
+			print "device found"
+		if dev.is_kernel_driver_active(0) is True:
+			print "but we need to detach kernel driver"
+		dev.detach_kernel_driver(0)
+		print "claiming device"
+		usb.util.claim_interface(dev, 0)
+		
+		
+		print "release claimed interface"
+		usb.util.release_interface(dev, 0)
+		print "now attaching the kernel driver again"
+		dev.attach_kernel_driver(0)
+		print "all done"
+		
+		print "resetting device"
+		dev.reset()
+		print "device reset"'''
+		# set the active configuration. With no arguments, the first
+		# configuration will be the active one
+		#dev.set_configuration()
 
+		# get an endpoint instance
 		self.handle = dev.open()
-
-		try:
-			self.handle.reset()
-
-		except usb.USBError, e:
-			if e.message.find("not permitted") >= 0:
-				return 2
-			else:
-				raise e
-
-
-#		self.handle.setConfiguration(dev.configurations[0])
-
-		try:
-			self.handle.claimInterface( 0 )
-		except usb.USBError, e:
-			if e.message.find("could not claim interface") >= 0:
-				self.handle.detachKernelDriver( 0 )
-				self.handle.claimInterface( 0 )
-
-		self.handle.setAltInterface(0)
-
+		#cfg = dev.get_active_configuration()
+		#interface = cfg[(0,0)]
+		#self.endpoint = interface[0]
+		
 		return 0
 
 	# -----------------------------
